@@ -1,0 +1,75 @@
+rules_version = '2';
+
+// Regras do Firestore da Nesaro.
+// O backend .NET usa o Admin SDK, que ignora estas regras.
+// O app (cliente) só pode mexer nos próprios dados e nunca nos campos que o backend controla.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isShortText(value, min, max) {
+      return value is string && value.size() >= min && value.size() <= max;
+    }
+
+    function isOptionalText(data, field, max) {
+      return !(field in data) || data[field] == null || isShortText(data[field], 0, max);
+    }
+
+    function validAutomation(d) {
+      return isShortText(d.name, 1, 80)
+        && d.triggerType == 'comment'
+        && isShortText(d.keyword, 1, 40)
+        && d.matchType in ['contains', 'exact']
+        && isShortText(d.dmMessage, 1, 1000)
+        && d.active is bool
+        && isOptionalText(d, 'mediaId', 100)
+        && isOptionalText(d, 'publicReply', 300)
+        && isOptionalText(d, 'link', 500);
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+
+      // "instagram" e "plan" só o backend grava.
+      allow create: if isOwner(uid)
+        && !request.resource.data.keys().hasAny(['instagram', 'plan']);
+      allow update: if isOwner(uid)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['instagram', 'plan', 'email']);
+      allow delete: if false;
+
+      match /automations/{automationId} {
+        allow read, delete: if isOwner(uid);
+
+        // Contadores nascem zerados e o app nunca altera.
+        allow create: if isOwner(uid)
+          && validAutomation(request.resource.data)
+          && request.resource.data.stats == {'matched': 0, 'sent': 0, 'failed': 0};
+        allow update: if isOwner(uid)
+          && validAutomation(request.resource.data)
+          && request.resource.data.stats == resource.data.stats;
+      }
+
+      // Histórico: só leitura no app.
+      match /executions/{executionId} {
+        allow read: if isOwner(uid);
+        allow write: if false;
+      }
+    }
+
+    // Dados só do servidor: nenhum acesso pelo app.
+    match /igAccounts/{igAccountId} {
+      allow read, write: if false;
+    }
+
+    match /igTokens/{uid} {
+      allow read, write: if false;
+    }
+  }
+}

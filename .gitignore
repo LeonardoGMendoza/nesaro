@@ -1,0 +1,36 @@
+# ===== Segredos (NUNCA subir) =====
+.env
+backend/secrets/
+backend/keys/
+*service-account*.json
+
+# ===== .NET =====
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+
+# ===== Flutter / Dart =====
+app/.dart_tool/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/build/
+app/.idea/
+app/*.iml
+app/android/.gradle/
+app/android/local.properties
+app/ios/Pods/
+app/ios/Flutter/Generated.xcconfig
+app/ios/Flutter/flutter_export_environment.sh
+
+# ===== Firebase CLI =====
+.firebase/
+firebase-debug.log
+
+# ===== Sistema =====
+.DS_Store
+Thumbs.db
+
+# Pacote baixado
+*.zip

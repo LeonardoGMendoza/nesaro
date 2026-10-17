@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Nesaro.Api</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Composition root: o único projeto que conhece todas as camadas e liga tudo. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Nesaro.Application\Nesaro.Application.csproj" />
+    <ProjectReference Include="..\Nesaro.Infrastructure\Nesaro.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

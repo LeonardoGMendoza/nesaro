@@ -1,0 +1,4 @@
+# HTTPS automático (Let's Encrypt). A Meta exige HTTPS no webhook e no callback.
+{$API_DOMAIN} {
+	reverse_proxy api:8080
+}

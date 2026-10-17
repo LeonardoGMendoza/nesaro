@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Nesaro.Domain</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Camada mais interna: não depende de nenhum outro projeto nem pacote. -->
+
+</Project>

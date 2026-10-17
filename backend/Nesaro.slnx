@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Nesaro.Domain/Nesaro.Domain.csproj" />
+    <Project Path="src/Nesaro.Application/Nesaro.Application.csproj" />
+    <Project Path="src/Nesaro.Infrastructure/Nesaro.Infrastructure.csproj" />
+    <Project Path="src/Nesaro.Api/Nesaro.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Nesaro.Domain.Tests/Nesaro.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

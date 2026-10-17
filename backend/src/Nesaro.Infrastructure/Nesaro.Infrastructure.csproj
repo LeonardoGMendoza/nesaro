@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Nesaro.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Implementa as interfaces da Application. É a única camada que conhece Firestore, Firebase e a API da Meta. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Nesaro.Application\Nesaro.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Data Protection, HttpClientFactory, Options, Hosting e WebUtilities vêm do framework ASP.NET Core. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Google.Cloud.Firestore" Version="3.9.0" />
+    <PackageReference Include="FirebaseAdmin" Version="3.0.1" />
+  </ItemGroup>
+
+</Project>

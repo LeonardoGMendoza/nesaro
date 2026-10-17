@@ -1,0 +1,37 @@
+# Sobe a API da Nesaro no VPS.
+#   cp .env.example .env   (preencha)
+#   coloque a conta de serviço do Firebase em ./secrets/firebase-service-account.json
+#   docker compose up -d --build
+#
+# Já usa nginx/Traefik no VPS (ex.: para o n8n)? Remova o serviço "caddy"
+# e aponte seu proxy existente para api:8080 (ou para a porta 8080 do host).
+
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./secrets:/app/secrets:ro
+      - ./keys:/app/keys
+    ports:
+      - "127.0.0.1:8080:8080"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      - API_DOMAIN=${API_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
