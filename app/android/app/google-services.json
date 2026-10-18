@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "433300943872",
+    "project_id": "nesaro-app",
+    "storage_bucket": "nesaro-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:433300943872:android:4cdd22c4c7c4f1edc754e5",
+        "android_client_info": {
+          "package_name": "br.com.nesaro.nesaro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-B24F7lvWAO3qOfuEgZIT6MfTxFRARjo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
