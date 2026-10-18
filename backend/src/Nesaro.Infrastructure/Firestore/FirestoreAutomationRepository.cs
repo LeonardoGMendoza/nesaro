@@ -2,6 +2,7 @@ using Google.Cloud.Firestore;
 using Nesaro.Application.Abstractions;
 using Nesaro.Domain.Entities;
 using Nesaro.Domain.Enums;
+using MatchType = Nesaro.Domain.Enums.MatchType;
 
 namespace Nesaro.Infrastructure.Firestore;
 

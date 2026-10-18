@@ -1,4 +1,4 @@
-using Nesaro.Domain.Enums;
+using MatchType = Nesaro.Domain.Enums.MatchType;
 using Nesaro.Domain.Services;
 
 namespace Nesaro.Domain.Entities;

@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text;
-using Nesaro.Domain.Enums;
+using MatchType = Nesaro.Domain.Enums.MatchType;
 
 namespace Nesaro.Domain.Services;
 
