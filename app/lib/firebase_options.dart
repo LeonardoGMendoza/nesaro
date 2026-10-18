@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -56,13 +53,21 @@ class DefaultFirebaseOptions {
     projectId: 'nesaro-app',
     storageBucket: 'nesaro-app.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBXZpaSaiPDx_F1Y8IM25W860NO06o2fkU',
     appId: '1:433300943872:ios:b72d174fabda9998c754e5',
     messagingSenderId: '433300943872',
     projectId: 'nesaro-app',
     storageBucket: 'nesaro-app.firebasestorage.app',
+    iosClientId: '433300943872-iirlg7iinqv2udbsrfmdttc5m9dv314f.apps.googleusercontent.com',
     iosBundleId: 'br.com.nesaro.nesaro',
+  );
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCbqegEVngv-5ztNb5liu5meLveSAB8NTI',
+    appId: '1:433300943872:web:b0445eac249b1c36c754e5',
+    messagingSenderId: '433300943872',
+    projectId: 'nesaro-app',
+    authDomain: 'nesaro-app.firebaseapp.com',
+    storageBucket: 'nesaro-app.firebasestorage.app',
   );
 }

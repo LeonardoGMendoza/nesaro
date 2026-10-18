@@ -1,0 +1,56 @@
+# Publica o painel web da Nesaro no GitHub Pages a cada push na main.
+# Endereço: https://leonardogmendoza.github.io/nesaro/
+#
+# Uma vez só: GitHub → Settings → Pages → Source: "GitHub Actions".
+
+name: Publicar painel web
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - ".github/workflows/deploy-web.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      # base-href /nesaro/ porque o site fica em leonardogmendoza.github.io/nesaro/
+      - run: flutter build web --release --base-href /nesaro/ --dart-define=NESARO_API_URL=https://api.nesaro.app.br
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -31,11 +31,18 @@ class AuthGate extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: context.read<AuthRepository>().authStateChanges(),
       builder: (context, snapshot) {
+        final Widget child;
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: NesaroLogo(size: 96)));
+          child = const Scaffold(
+            key: ValueKey('splash'),
+            body: Center(child: NesaroWordmark(logoSize: 140)),
+          );
+        } else if (snapshot.data == null) {
+          child = const LoginPage(key: ValueKey('login'));
+        } else {
+          child = HomeShell(key: ValueKey(snapshot.data!.uid), user: snapshot.data!);
         }
-        final user = snapshot.data;
-        return user == null ? const LoginPage() : HomeShell(user: user);
+        return AnimatedSwitcher(duration: const Duration(milliseconds: 400), child: child);
       },
     );
   }
