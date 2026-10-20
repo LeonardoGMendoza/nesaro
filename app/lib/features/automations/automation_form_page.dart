@@ -205,7 +205,7 @@ class _AutomationFormPageState extends State<AutomationFormPage> {
           _Section(
             number: 2,
             title: 'Resposta',
-            subtitle: '…a Nesaro envia no Direct',
+            subtitle: '…a AliceFlow envia no Direct',
             children: [
               TextFormField(
                 controller: _dmMessage,
@@ -325,7 +325,7 @@ class _RulesNote extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: const Color(0xFFF7EFE0), borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(color: const Color(0xFFF1EEFF), borderRadius: BorderRadius.circular(16)),
       child: const Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

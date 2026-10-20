@@ -1,27 +1,44 @@
 import 'package:flutter/material.dart';
 
-/// Cores do logotipo: tinta (sumi), papel (washi), sakura e o vermelho do carimbo (hanko).
+/// Cores da marca AliceFlow: azul-noite, azul elétrico, roxo e magenta.
+///
+/// Os nomes antigos (ink, paper, sakura, seal) foram mantidos para não quebrar
+/// as telas; só os valores mudaram para a paleta nova.
 class NesaroColors {
   const NesaroColors._();
 
-  static const ink = Color(0xFF1F1B16);
-  static const inkSoft = Color(0xFF3A332B);
-  static const paper = Color(0xFFF5EFE3);
-  static const paperDeep = Color(0xFFEDE5D6);
-  static const sakura = Color(0xFFD45A73);
-  static const sakuraLight = Color(0xFFE07088);
-  static const sakuraMist = Color(0xFFFBE7EC);
-  static const seal = Color(0xFFB83A2A);
-  static const muted = Color(0xFF5A5249);
-  static const line = Color(0x1F1F1B16);
+  // Marca
+  static const night = Color(0xFF0B0A24);
+  static const blue = Color(0xFF3B6CFF);
+  static const violet = Color(0xFF8B3DFF);
+  static const magenta = Color(0xFFE03CF0);
+
+  // Papéis usados nas telas
+  static const ink = Color(0xFF14123A);
+  static const inkSoft = Color(0xFF2E2A6B);
+  static const paper = Color(0xFFF6F5FF);
+  static const paperDeep = Color(0xFFEAE8FB);
+  static const sakura = violet;
+  static const sakuraLight = Color(0xFFB66BFF);
+  static const sakuraMist = Color(0xFFEFE6FF);
+  static const seal = Color(0xFFC62E4A);
+  static const muted = Color(0xFF5C5980);
+  static const line = Color(0x1F14123A);
   static const success = Color(0xFF1A7F4E);
   static const successMist = Color(0xFFE3F3EA);
 
-  /// Cartão de destaque do painel: tinta → vinho → sakura.
+  /// Gradiente do logo: azul → roxo → magenta.
+  static const brandGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [blue, violet, magenta],
+  );
+
+  /// Cartão de destaque do painel e lateral do login: noite → índigo → roxo.
   static const heroGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [ink, Color(0xFF5B2333), sakura],
+    colors: [night, Color(0xFF2A1F8F), Color(0xFF8B3DFF)],
     stops: [0, 0.6, 1],
   );
 
@@ -47,7 +64,7 @@ ThemeData buildNesaroTheme() {
 
   final border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(14),
-    borderSide: const BorderSide(color: Color(0x261F1B16)),
+    borderSide: const BorderSide(color: Color(0x2614123A)),
   );
 
   return ThemeData(

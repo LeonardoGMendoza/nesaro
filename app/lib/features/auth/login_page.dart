@@ -235,7 +235,7 @@ class _LoginFormState extends State<_LoginForm> {
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: NesaroColors.ink,
-                      side: const BorderSide(color: Color(0x331F1B16)),
+                      side: const BorderSide(color: Color(0x3314123A)),
                     ),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,

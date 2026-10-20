@@ -1,13 +1,18 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../core/theme.dart';
 
-/// Símbolo da Nesaro: raiz (根) que sobe pelo caminho (路) e floresce (咲).
+/// Símbolo da AliceFlow: balão de conversa com um raio no meio
+/// (a resposta automática que sai na hora).
 ///
-/// Com [animated] = true, a raiz e o caule se desenham, as pétalas abrem uma a uma
-/// e a flor balança de leve, sem parar. Desenhado em código: não precisa de imagem.
+/// Com [animated] = true, o balão se desenha, o raio "acende" com um pulo
+/// e depois pulsa de leve, sem parar. Desenhado em código: não precisa de imagem.
+///
+/// Por padrão usa o gradiente da marca (azul → roxo → magenta). Se [inkColor]
+/// for diferente de [NesaroColors.ink], o símbolo fica de uma cor só, nessa cor
+/// (ex.: branco em cima de um fundo colorido).
+///
+/// O nome da classe continua `NesaroLogo` para não mexer em todas as telas.
 class NesaroLogo extends StatefulWidget {
   const NesaroLogo({
     super.key,
@@ -21,6 +26,8 @@ class NesaroLogo extends StatefulWidget {
   final double size;
   final bool animated;
   final Color inkColor;
+
+  /// Mantidos por compatibilidade com as telas; não são mais usados no desenho.
   final Color petalColor;
   final Color centerColor;
 
@@ -30,179 +37,149 @@ class NesaroLogo extends StatefulWidget {
 
 class _NesaroLogoState extends State<NesaroLogo> with TickerProviderStateMixin {
   AnimationController? _grow;
-  AnimationController? _sway;
+  AnimationController? _pulse;
 
   @override
   void initState() {
     super.initState();
     if (widget.animated) {
-      _grow = AnimationController(vsync: this, duration: const Duration(milliseconds: 1800))..forward();
-      _sway = AnimationController(vsync: this, duration: const Duration(seconds: 4))..repeat(reverse: true);
+      _grow = AnimationController(vsync: this, duration: const Duration(milliseconds: 1400))..forward();
+      _pulse = AnimationController(vsync: this, duration: const Duration(milliseconds: 2200))..repeat(reverse: true);
     }
   }
 
   @override
   void dispose() {
     _grow?.dispose();
-    _sway?.dispose();
+    _pulse?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final grow = _grow;
-    final sway = _sway;
+    final pulse = _pulse;
+    final mono = widget.inkColor != NesaroColors.ink ? widget.inkColor : null;
 
-    Widget paint(double progress, double swing) => CustomPaint(
+    Widget paint(double progress, double glow) => CustomPaint(
           size: Size.square(widget.size),
-          painter: _NesaroLogoPainter(
-            ink: widget.inkColor,
-            petal: widget.petalColor,
-            center: widget.centerColor,
-            progress: progress,
-            swing: swing,
-          ),
+          painter: _AliceFlowLogoPainter(mono: mono, progress: progress, glow: glow),
         );
 
     return Semantics(
-      label: 'Logotipo Nesaro',
+      label: 'Logotipo AliceFlow',
       image: true,
-      child: grow == null || sway == null
+      child: grow == null || pulse == null
           ? paint(1, 0)
           : AnimatedBuilder(
-              animation: Listenable.merge([grow, sway]),
+              animation: Listenable.merge([grow, pulse]),
               builder: (context, _) => paint(
-                Curves.easeInOutCubic.transform(grow.value),
-                Curves.easeInOutSine.transform(sway.value) * 2 - 1,
+                grow.value,
+                Curves.easeInOutSine.transform(pulse.value),
               ),
             ),
     );
   }
 }
 
-class _NesaroLogoPainter extends CustomPainter {
-  _NesaroLogoPainter({
-    required this.ink,
-    required this.petal,
-    required this.center,
-    required this.progress,
-    required this.swing,
-  });
+class _AliceFlowLogoPainter extends CustomPainter {
+  _AliceFlowLogoPainter({required this.mono, required this.progress, required this.glow});
 
-  final Color ink;
-  final Color petal;
-  final Color center;
+  /// null = gradiente da marca; uma cor = símbolo de uma cor só.
+  final Color? mono;
 
   /// 0 → nada desenhado; 1 → logo completo.
   final double progress;
 
-  /// -1 a 1: balanço da flor.
-  final double swing;
+  /// 0 a 1: pulso do raio.
+  final double glow;
 
-  /// Fração [start, end] do progresso total mapeada para 0..1.
   double _phase(double start, double end) => ((progress - start) / (end - start)).clamp(0.0, 1.0);
+
+  static const _box = Rect.fromLTWH(20, 20, 170, 170);
+
+  Paint _brush({required PaintingStyle style, double width = 0, Gradient? gradient}) {
+    final p = Paint()
+      ..style = style
+      ..strokeWidth = width
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..isAntiAlias = true;
+    if (mono != null) {
+      p.color = mono!;
+    } else {
+      p.shader = (gradient ?? NesaroColors.brandGradient).createShader(_box);
+    }
+    return p;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
     canvas.scale(size.width / 200, size.height / 200);
 
-    Paint stroke(double width, {double opacity = 1}) => Paint()
-      ..color = ink.withValues(alpha: opacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = width
-      ..strokeCap = StrokeCap.round;
-
-    void drawPartial(Path path, Paint paint, double t) {
-      if (t <= 0) return;
-      for (final metric in path.computeMetrics()) {
-        canvas.drawPath(metric.extractPath(0, metric.length * t), paint);
+    // 1) Balão de conversa, com a ponta embaixo à esquerda.
+    final bubble = Path()
+      ..moveTo(70, 146)
+      ..cubicTo(40, 128, 32, 96, 42, 70)
+      ..cubicTo(56, 34, 104, 22, 142, 32)
+      ..cubicTo(176, 42, 188, 80, 177, 110)
+      ..cubicTo(165, 144, 124, 160, 92, 152)
+      ..lineTo(60, 178)
+      ..close();
+    final bubbleT = Curves.easeInOutCubic.transform(_phase(0, 0.6));
+    final stroke = _brush(style: PaintingStyle.stroke, width: 15);
+    if (bubbleT > 0) {
+      for (final m in bubble.computeMetrics()) {
+        canvas.drawPath(m.extractPath(0, m.length * bubbleT), stroke);
       }
     }
 
-    // 1) Chão
-    drawPartial(Path()..moveTo(56, 168)..lineTo(144, 168), stroke(3, opacity: 0.3), _phase(0, 0.15));
-
-    // 2) Raízes
-    final roots = <List<double>>[
-      [100, 168, 92, 176, 80, 180, 66, 188, 4.5],
-      [100, 168, 103, 177, 98, 186, 101, 196, 4.5],
-      [100, 168, 110, 176, 122, 180, 136, 186, 4.5],
-      [82, 180, 78, 186, 74, 189, 68, 192, 2.5],
-      [120, 179, 124, 185, 128, 188, 132, 194, 2.5],
-    ];
-    final rootT = _phase(0.05, 0.35);
-    for (final r in roots) {
-      final path = Path()
-        ..moveTo(r[0], r[1])
-        ..cubicTo(r[2], r[3], r[4], r[5], r[6], r[7]);
-      drawPartial(path, stroke(r[8]), rootT);
-    }
-
-    // 3) Caminho (caule) — cresce para cima
-    final stem = Path()
-      ..moveTo(100, 168)
-      ..cubicTo(70, 145, 128, 118, 100, 92);
-    drawPartial(stem, stroke(7), _phase(0.3, 0.6));
-
-    // 4) Folha
-    final leafT = Curves.easeOutBack.transform(_phase(0.5, 0.7));
-    if (leafT > 0) {
-      canvas.save();
-      canvas.translate(108, 130);
-      canvas.scale(leafT);
-      canvas.translate(-108, -130);
-      final leaf = Path()
-        ..moveTo(108, 130)
-        ..cubicTo(120, 117, 136, 118, 142, 124)
-        ..cubicTo(132, 135, 118, 138, 108, 130)
+    // 2) Raio no centro: aparece com um pulo e depois pulsa.
+    final boltT = Curves.easeOutBack.transform(_phase(0.5, 1));
+    if (boltT > 0) {
+      final bolt = Path()
+        ..moveTo(124, 50)
+        ..lineTo(84, 101)
+        ..lineTo(107, 101)
+        ..lineTo(95, 138)
+        ..lineTo(135, 84)
+        ..lineTo(112, 84)
         ..close();
-      canvas.drawPath(leaf, Paint()..color = ink);
-      canvas.restore();
-    }
-
-    // 5) Flor de sakura — pétalas abrem uma a uma e a flor balança
-    final petalPath = Path()
-      ..moveTo(0, 0)
-      ..cubicTo(-13, -8, -14, -28, -6, -33)
-      ..lineTo(0, -28)
-      ..lineTo(6, -33)
-      ..cubicTo(14, -28, 13, -8, 0, 0)
-      ..close();
-    final petalPaint = Paint()..color = petal;
-
-    canvas.save();
-    canvas.translate(100, 58);
-    canvas.rotate(swing * 6 * math.pi / 180);
-    for (var i = 0; i < 5; i++) {
-      final t = Curves.easeOutBack.transform(_phase(0.6 + i * 0.06, 0.78 + i * 0.06));
-      if (t <= 0) continue;
+      const c = Offset(110, 94);
+      final scale = boltT * (1 + 0.05 * glow);
       canvas.save();
-      canvas.rotate(i * 72 * math.pi / 180);
-      canvas.scale(t);
-      canvas.drawPath(petalPath, petalPaint);
+      canvas.translate(c.dx, c.dy);
+      canvas.scale(scale);
+      canvas.translate(-c.dx, -c.dy);
+
+      if (mono == null && glow > 0) {
+        canvas.drawPath(
+          bolt,
+          Paint()
+            ..color = NesaroColors.magenta.withValues(alpha: 0.28 * glow)
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10),
+        );
+      }
+      const boltGradient = LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [NesaroColors.magenta, NesaroColors.violet],
+      );
+      canvas.drawPath(bolt, _brush(style: PaintingStyle.fill, gradient: boltGradient));
+      canvas.drawPath(bolt, _brush(style: PaintingStyle.stroke, width: 5, gradient: boltGradient));
       canvas.restore();
     }
-    final coreT = _phase(0.9, 1);
-    if (coreT > 0) {
-      canvas.drawCircle(Offset.zero, 6 * coreT, Paint()..color = center);
-      canvas.drawCircle(Offset.zero, 2.5 * coreT, Paint()..color = ink);
-    }
-    canvas.restore();
 
     canvas.restore();
   }
 
   @override
-  bool shouldRepaint(covariant _NesaroLogoPainter old) =>
-      old.progress != progress ||
-      old.swing != swing ||
-      old.ink != ink ||
-      old.petal != petal ||
-      old.center != center;
+  bool shouldRepaint(covariant _AliceFlowLogoPainter old) =>
+      old.progress != progress || old.glow != glow || old.mono != mono;
 }
 
-/// Logo + nome + japonês + slogan.
+/// Logo + nome "AliceFlow" + slogan.
 class NesaroWordmark extends StatelessWidget {
   const NesaroWordmark({
     super.key,
@@ -218,54 +195,60 @@ class NesaroWordmark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final main = light ? NesaroColors.paper : NesaroColors.ink;
-    final soft = light ? const Color(0xFFE6DCCB) : NesaroColors.muted;
+    final main = light ? Colors.white : NesaroColors.ink;
+    final soft = light ? const Color(0xFFD9D6FF) : NesaroColors.muted;
+    const nameStyle = TextStyle(fontSize: 38, fontWeight: FontWeight.w800, letterSpacing: -0.5, height: 1.1);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        NesaroLogo(
-          size: logoSize,
-          animated: animated,
-          inkColor: main,
-          petalColor: light ? NesaroColors.sakuraLight : NesaroColors.sakura,
-          centerColor: light ? NesaroColors.ink : NesaroColors.paper,
-        ),
-        const SizedBox(height: 8),
+        NesaroLogo(size: logoSize, animated: animated),
+        const SizedBox(height: 10),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'NESARO',
-              style: TextStyle(fontSize: 36, fontWeight: FontWeight.w800, letterSpacing: 5, color: main),
+            Text('Alice', style: nameStyle.copyWith(color: main)),
+            ShaderMask(
+              blendMode: BlendMode.srcIn,
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [NesaroColors.magenta, NesaroColors.violet, NesaroColors.blue],
+              ).createShader(bounds),
+              child: Text('Flow', style: nameStyle.copyWith(color: Colors.white)),
             ),
-            const SizedBox(width: 10),
-            const _Hanko(),
           ],
         ),
-        Text('ネサロ · 根咲路', style: TextStyle(fontSize: 15, letterSpacing: 3, color: soft)),
-        const SizedBox(height: 8),
-        Text('Respostas automáticas no Direct', style: TextStyle(fontSize: 15, color: soft)),
+        const SizedBox(height: 6),
+        Text(
+          'Automação inteligente para Instagram',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 15, letterSpacing: 0.4, color: soft),
+        ),
       ],
     );
   }
 }
 
-/// Carimbo vermelho (hanko) com 根咲路 na vertical.
-class _Hanko extends StatelessWidget {
-  const _Hanko();
+/// Nome "AliceFlow" em uma linha, para barras e menus.
+class AliceFlowName extends StatelessWidget {
+  const AliceFlowName({super.key, this.fontSize = 20});
+
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 30,
-      height: 30,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(color: NesaroColors.seal, borderRadius: BorderRadius.circular(5)),
-      child: const Text(
-        '咲',
-        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700, height: 1),
-      ),
+    final style = TextStyle(fontSize: fontSize, fontWeight: FontWeight.w800, letterSpacing: -0.3);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('Alice', style: style.copyWith(color: NesaroColors.ink)),
+        ShaderMask(
+          blendMode: BlendMode.srcIn,
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [NesaroColors.magenta, NesaroColors.violet, NesaroColors.blue],
+          ).createShader(bounds),
+          child: Text('Flow', style: style.copyWith(color: Colors.white)),
+        ),
+      ],
     );
   }
 }

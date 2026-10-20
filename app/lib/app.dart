@@ -14,7 +14,7 @@ class NesaroApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Nesaro',
+      title: 'AliceFlow',
       debugShowCheckedModeBanner: false,
       theme: buildNesaroTheme(),
       home: const AuthGate(),

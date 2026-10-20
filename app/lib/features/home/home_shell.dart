@@ -75,10 +75,7 @@ class _HomeShellState extends State<HomeShell> {
                       children: [
                         NesaroLogo(size: 40, animated: true),
                         SizedBox(width: 8),
-                        Text(
-                          'NESARO',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: 3),
-                        ),
+                        AliceFlowName(fontSize: 20),
                       ],
                     )
                   : const NesaroLogo(size: 40, animated: true),

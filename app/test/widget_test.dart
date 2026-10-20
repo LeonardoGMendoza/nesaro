@@ -5,12 +5,13 @@ import 'package:nesaro/widgets/nesaro_logo.dart';
 // O teste padrão do `flutter create` usava `MyApp`, que não existe aqui.
 // Este teste não depende do Firebase: só confere que o logotipo renderiza.
 void main() {
-  testWidgets('NesaroWordmark mostra o nome e o logotipo', (tester) async {
+  testWidgets('Wordmark mostra o nome AliceFlow e o logotipo', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(home: Scaffold(body: Center(child: NesaroWordmark()))),
     );
 
-    expect(find.text('NESARO'), findsOneWidget);
+    expect(find.text('Alice'), findsOneWidget);
+    expect(find.text('Flow'), findsOneWidget);
     expect(find.byType(NesaroLogo), findsOneWidget);
   });
 }

@@ -38,7 +38,7 @@ class DashboardPage extends StatelessWidget {
                 children: [
                   NesaroLogo(size: 34, animated: true),
                   SizedBox(width: 8),
-                  Text('Nesaro'),
+                  AliceFlowName(fontSize: 22),
                 ],
               ),
             )
@@ -139,8 +139,8 @@ class _HeroCard extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         const Text(
-          'Cada comentário pode virar um cliente. A Nesaro responde por você no Direct, 24 horas por dia.',
-          style: TextStyle(color: Color(0xFFF3E6E9), fontSize: 15, height: 1.4),
+          'Cada comentário pode virar um cliente. A AliceFlow responde por você no Direct, 24 horas por dia.',
+          style: TextStyle(color: Color(0xFFE9E6FF), fontSize: 15, height: 1.4),
         ),
         const SizedBox(height: 16),
         Wrap(
@@ -169,7 +169,7 @@ class _HeroCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: NesaroColors.heroGradient,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: const [BoxShadow(color: Color(0x33D45A73), blurRadius: 24, offset: Offset(0, 10))],
+        boxShadow: const [BoxShadow(color: Color(0x338B3DFF), blurRadius: 24, offset: Offset(0, 10))],
       ),
       child: phone
           ? text

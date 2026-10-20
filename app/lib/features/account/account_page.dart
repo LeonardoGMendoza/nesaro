@@ -206,7 +206,7 @@ class _InstagramCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 14),
                 const Text(
-                  'A autorização é feita na página oficial da Meta. A Nesaro nunca pede nem guarda sua senha.',
+                  'A autorização é feita na página oficial da Meta. A AliceFlow nunca pede nem guarda sua senha.',
                   style: TextStyle(color: NesaroColors.muted, height: 1.35),
                 ),
                 const SizedBox(height: 16),

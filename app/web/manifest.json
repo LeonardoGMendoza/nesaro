@@ -1,11 +1,11 @@
 {
-    "name": "nesaro",
-    "short_name": "nesaro",
+    "name": "AliceFlow",
+    "short_name": "AliceFlow",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0B0A24",
+    "theme_color": "#0B0A24",
+    "description": "Automação inteligente para Instagram: responde comentários e envia mensagens no Direct.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

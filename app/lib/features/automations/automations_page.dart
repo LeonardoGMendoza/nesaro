@@ -392,7 +392,7 @@ class _EmptyState extends StatelessWidget {
                 const Text('Sua primeira automação', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 8),
                 const Text(
-                  'Escolha uma palavra como QUERO e a mensagem que vai no Direct. A Nesaro responde sozinha, 24 horas.',
+                  'Escolha uma palavra como QUERO e a mensagem que vai no Direct. A AliceFlow responde sozinha, 24 horas.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: NesaroColors.muted, height: 1.4),
                 ),
