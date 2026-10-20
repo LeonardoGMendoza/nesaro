@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/theme.dart';
 import '../../data/repositories/auth_repository.dart';
+import '../../widgets/alice_avatar.dart';
 import '../../widgets/motion.dart';
 import '../../widgets/nesaro_logo.dart';
 import '../../widgets/responsive.dart';
@@ -32,7 +33,9 @@ class LoginPage extends StatelessWidget {
             padding: EdgeInsets.all(24),
             child: Column(
               children: [
-                FadeSlideIn(child: NesaroWordmark(logoSize: 120)),
+                FadeSlideIn(child: AliceAvatar(size: 96)),
+                SizedBox(height: 12),
+                FadeSlideIn(child: NesaroWordmark(logoSize: 72)),
                 SizedBox(height: 28),
                 FadeSlideIn(delay: Duration(milliseconds: 200), child: _LoginForm()),
               ],
@@ -58,43 +61,63 @@ class _BrandPanel extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(gradient: NesaroColors.heroGradient),
-      padding: const EdgeInsets.all(48),
       child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 460),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const FadeSlideIn(child: NesaroWordmark(light: true, logoSize: 150)),
-              const SizedBox(height: 40),
-              for (var i = 0; i < benefits.length; i++)
-                FadeSlideIn(
-                  delay: Duration(milliseconds: 600 + i * 120),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(benefits[i].$1, color: Colors.white, size: 20),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Text(
-                            benefits[i].$2,
-                            style: const TextStyle(color: Colors.white, fontSize: 16, height: 1.3),
-                          ),
-                        ),
-                      ],
-                    ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(40),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const FadeSlideIn(
+                  child: Row(
+                    children: [
+                      NesaroLogo(size: 48, animated: true),
+                      SizedBox(width: 10),
+                      AliceFlowName(fontSize: 26, light: true),
+                    ],
                   ),
                 ),
-            ],
+                const SizedBox(height: 28),
+                const AliceShowcase(),
+                const SizedBox(height: 28),
+                const FadeSlideIn(
+                  delay: Duration(milliseconds: 300),
+                  child: Text(
+                    'Seu Instagram trabalhando por você!',
+                    style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800, height: 1.2),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                for (var i = 0; i < benefits.length; i++)
+                  FadeSlideIn(
+                    delay: Duration(milliseconds: 600 + i * 120),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(benefits[i].$1, color: Colors.white, size: 18),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              benefits[i].$2,
+                              style: const TextStyle(color: Colors.white, fontSize: 15, height: 1.3),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

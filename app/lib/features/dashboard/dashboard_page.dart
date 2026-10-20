@@ -12,6 +12,7 @@ import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/automation_repository.dart';
 import '../../data/repositories/execution_repository.dart';
 import '../../widgets/motion.dart';
+import '../../widgets/alice_avatar.dart';
 import '../../widgets/nesaro_logo.dart';
 import '../../widgets/responsive.dart';
 
@@ -177,13 +178,7 @@ class _HeroCard extends StatelessWidget {
               children: [
                 Expanded(child: text),
                 const SizedBox(width: 24),
-                const NesaroLogo(
-                  size: 140,
-                  animated: true,
-                  inkColor: NesaroColors.paper,
-                  petalColor: NesaroColors.sakuraLight,
-                  centerColor: NesaroColors.ink,
-                ),
+                const AliceAvatar(size: 128),
               ],
             ),
     );

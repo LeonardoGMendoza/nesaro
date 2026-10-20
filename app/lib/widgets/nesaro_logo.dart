@@ -230,9 +230,12 @@ class NesaroWordmark extends StatelessWidget {
 
 /// Nome "AliceFlow" em uma linha, para barras e menus.
 class AliceFlowName extends StatelessWidget {
-  const AliceFlowName({super.key, this.fontSize = 20});
+  const AliceFlowName({super.key, this.fontSize = 20, this.light = false});
 
   final double fontSize;
+
+  /// true = "Alice" em branco, para fundos escuros.
+  final bool light;
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +243,7 @@ class AliceFlowName extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Alice', style: style.copyWith(color: NesaroColors.ink)),
+        Text('Alice', style: style.copyWith(color: light ? Colors.white : NesaroColors.ink)),
         ShaderMask(
           blendMode: BlendMode.srcIn,
           shaderCallback: (bounds) => const LinearGradient(
